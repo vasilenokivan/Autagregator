@@ -23,6 +23,7 @@ MainWindow::~MainWindow()
     delete findTextEditFlow;
     delete ui;
     //нужно закрыть процес close(), а потом уничтожить.
+    //если процесс закончился, закрывать его не обязательно
     while(!findProcessList.isEmpty())
     {
         (*findProcessList.begin())->close();
@@ -63,13 +64,13 @@ void MainWindow::setStartArgument(const QStringList & strArgv)
 void MainWindow::findSlotStOutput()
 {
     QProcess *processOut=dynamic_cast<QProcess*>(sender());
-    QByteArray setByteFlow= processOut->readAllStandardOutput ();
-    findTextEditFlow->append(setByteFlow);
+    QByteArray setByteFlow= processOut->readAllStandardOutput ();   
+    findTextEditFlow->append(QString("<font color=green>%1</font>").arg(QString(setByteFlow))); //выводит строку и задает ей определенный цвет.
 }
 
 void MainWindow::findSlotStError()
 {   
     QProcess *processOut=dynamic_cast<QProcess*>(sender());
-    QByteArray setByteFlow= processOut->readAllStandardError();   
-    findTextEditFlow->append(setByteFlow);
+    QByteArray setByteFlow= processOut->readAllStandardError();
+    findTextEditFlow->append(QString("<font color=red>%1</font>").arg(QString(setByteFlow))); //выводит строку и задает ей определенный цвет.
 }
